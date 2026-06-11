@@ -1,34 +1,48 @@
 plugins {
-    id("org.jetbrains.intellij") version "0.4.16"
-    kotlin("jvm") version "1.3.70-eap-42"
+    id("org.jetbrains.intellij.platform") version "2.16.0"
+    kotlin("jvm") version "2.4.0"
 }
 
+// FIXME: I just bumped some versions, etc. drive-by style,
+// but this project/experiment is really old and broken.
+// needs proper update/refactor/redesign/or sth.
+
 group = "pl.mareklangiewicz"
-version = "1.0-SNAPSHOT"
+version = "1.2-SNAPSHOT"
 
 repositories {
-    maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
 }
 
-// See https://github.com/JetBrains/gradle-intellij-plugin/
-intellij {
-    version = "2019.3.2"
+// https://plugins.jetbrains.com/docs/intellij/creating-plugin-project.html
+intellijPlatform {
+  pluginConfiguration {
+    ideaVersion {
+      sinceBuild = "252"
+    }
+
+    changeNotes = """
+      Initial version
+    """.trimIndent()
+  }
 }
+
+
 tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
+  // Set the JVM compatibility versions
+  withType<JavaCompile> {
+    sourceCompatibility = "23"
+    targetCompatibility = "23"
+  }
+  withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "23"
+  }
 }
-tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-    changeNotes("""
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>""")
-}
+
