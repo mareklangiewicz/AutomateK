@@ -1,6 +1,10 @@
+import org.jetbrains.kotlin.gradle.dsl.*
+import pl.mareklangiewicz.deps.*
+import pl.mareklangiewicz.utils.*
+
 plugins {
-    id("org.jetbrains.intellij.platform") version "2.16.0"
-    kotlin("jvm") version "2.4.0"
+    id("org.jetbrains.intellij.platform") version "2.19.0" // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
+    plug(plugs.KotlinJvm)
 }
 
 // FIXME: I just bumped some versions, etc. drive-by style,
@@ -18,7 +22,9 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    intellijPlatform {
+        intellijIdea("2026.2.3") // https://www.jetbrains.com/idea/download/other.html
+    }
 }
 
 // https://plugins.jetbrains.com/docs/intellij/creating-plugin-project.html
@@ -41,8 +47,9 @@ tasks {
     sourceCompatibility = "23"
     targetCompatibility = "23"
   }
-  withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "23"
-  }
+}
+
+kotlin {
+  compilerOptions { jvmTarget = JvmTarget.JVM_23 }
 }
 
