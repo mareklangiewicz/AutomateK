@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.*
 import pl.mareklangiewicz.deps.*
 import pl.mareklangiewicz.utils.*
 
@@ -41,15 +40,5 @@ intellijPlatform {
 }
 
 
-tasks {
-  // Set the JVM compatibility versions
-  withType<JavaCompile> {
-    sourceCompatibility = "23"
-    targetCompatibility = "23"
-  }
-}
-
-kotlin {
-  compilerOptions { jvmTarget = JvmTarget.JVM_23 }
-}
-
+// One toolchain for both Java and Kotlin: the target IDE (2026.2) runs on JBR 25.
+kotlin { jvmToolchain(25) }
